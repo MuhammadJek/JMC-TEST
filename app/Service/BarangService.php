@@ -156,12 +156,17 @@ class BarangService
         $date = $request->input('expired');
         $nosurat = $request->input('no_surat');
         // dd($name);
+        // if ($name[0] == null) {
+        //     # code...
+
+        //     dd('asd');
+        // }
 
 
         // dd($dataValidateInformasi['max_price']);
         try {
             // dd($barang);
-            if (empty($name) && is_array($name)) {
+            if (isset($name[0]) && is_array($name)) {
                 $dataValidateBarang = $request->validate([
                     'name.*' => 'required',
                     'harga.*' => 'required',
@@ -227,7 +232,7 @@ class BarangService
                         }
                     }
 
-                    if (empty($name) && is_array($name)) {
+                    if (isset($name[0]) && is_array($name)) {
                         foreach ($name as $key => $value) {
                             Barang::create([
                                 'informasi_barang_id' => $id,

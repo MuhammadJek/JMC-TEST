@@ -7,19 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class isAdmin
+class locked
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role == 'admin' && Auth::user()->lock == 'unlocked') {
+        if (Auth::check() && Auth::user()->lock == 'unlocked') {
             return $next($request);
+        } else {
+            return redirect()->route('login');
         }
-        return redirect('/');
-        // return $next($request);
     }
 }

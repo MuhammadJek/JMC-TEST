@@ -21,6 +21,9 @@ class BarangController extends Controller
     public function __construct(private BarangService $barangService)
     {
         $this->middleware('auth');
+        $this->middleware('locked');
+
+        // $this->middleware('locked');
     }
     public function index(Request $request)
     {

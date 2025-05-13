@@ -21,7 +21,6 @@
                         <select name="category_id" id="category_id" class="form-select filter">
                             <option value="">--Semua Category--</option>
                             @foreach ($category as $item)
-                                {{-- {{ $item->value }} --}}
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
@@ -92,7 +91,6 @@
 
             });
         </script>
-        <!-- Javascript Validation -->
         <script>
             @if (Session::has('success'))
                 Swal.fire({

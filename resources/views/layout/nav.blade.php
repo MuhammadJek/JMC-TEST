@@ -1,8 +1,8 @@
 <nav class="flex-row p-0 navbar col-lg-12 col-12 fixed-top d-flex">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="mr-3 font-semibold navbar-brand brand-logo" href="/assets/index.html"><img
+        <a class="mr-3 font-semibold navbar-brand brand-logo" href="{{ route('barang.index') }}"><img
                 src="/assets/images/logo-white.png" class="ml-2 mr-2" alt="logo" />Aplikasi Pengelolaan Barang</a>
-        <a class="navbar-brand brand-logo-mini" href="/assets/index.html"><img src="/assets/images/logo-white.png"
+        <a class="navbar-brand brand-logo-mini" href="{{ route('barang.index') }}"><img src="/assets/images/logo-white.png"
                 alt="logo" /></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">

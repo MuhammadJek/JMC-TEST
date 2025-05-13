@@ -4,10 +4,10 @@
         <div class="gap-2 mb-2 d-flex align-items-center">
             <a href="#" class="text-decoration-none text-dark" style="font-size: 10pt;">HOME</a>
             <span> / </span>
-            <a href="#" class="text-decoration-none text-dark" style="font-size: 10pt;">SUBCATEGORY</a>
+            <a href="#" class="text-decoration-none text-dark" style="font-size: 10pt;">SUB KATEGORI</a>
 
         </div>
-        <h3 class="fw-bold">Sub Kategory</h3>
+        <h3 class="fw-bold">Sub Kategori</h3>
         <div class="card">
             <div class="card-body">
 
@@ -130,9 +130,9 @@
                         alert(jqXHR.responseText);
                     }
                 });
-                // $('#pembelianForm')[0].reset();
+                // $('#Sub KategoriForm')[0].reset();
                 $('#modalForm').modal('show');
-                $('.modal-title').text('Edit Pembelian');
+                $('.modal-title').text('Edit Sub Kategori');
                 $('.btnSubmit').text('Update');
             }
 

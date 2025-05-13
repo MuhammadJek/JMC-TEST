@@ -155,17 +155,8 @@ class BarangService
         $total_barang = $request->input('total_barang');
         $date = $request->input('expired');
         $nosurat = $request->input('no_surat');
-        // dd($name);
-        // if ($name[0] == null) {
-        //     # code...
-
-        //     dd('asd');
-        // }
-
-
-        // dd($dataValidateInformasi['max_price']);
         try {
-            // dd($barang);
+
             if (isset($name[0]) && is_array($name)) {
                 $dataValidateBarang = $request->validate([
                     'name.*' => 'required',

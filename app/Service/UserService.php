@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Enums\RoleEnum;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class UserService
@@ -16,15 +17,19 @@ class UserService
             return DataTables::of($users)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<button class="btn btn-sm btn-transparent" onclick="showEditModal(this)" data-id="' . $row->id . '"><i class="mdi mdi-pencil"></i></button>';
-                    $btn = $btn . '<button class="btn btn-sm btn-transparent" onclick="deleteModal(this)" data-id="' . $row->id . '"><i class="mdi mdi-delete text-danger"></i></button>';
-                    if ($row->lock == "unlocked") {
-                        $btn = $btn . '<button class="btn btn-sm btn-transparent lock-toggle" onclick="lockToggle(this)" data-id="' . $row->id . '"><i class="mdi mdi-lock-outline text-danger"></i></button>';
+                    if (Auth::user()->id == $row->id) {
+                        return null;
                     } else {
-                        $btn = $btn . '<button class="btn btn-sm btn-transparent lock-toggle" onclick="lockToggle(this)" data-id="' . $row->id . '"><i class="mdi mdi-lock-open-outline text-dark"></i></button>';
-                    }
+                        $btn = '<button class="btn btn-sm btn-transparent" onclick="showEditModal(this)" data-id="' . $row->id . '"><i class="mdi mdi-pencil"></i></button>';
+                        $btn = $btn . '<button class="btn btn-sm btn-transparent" onclick="deleteModal(this)" data-id="' . $row->id . '"><i class="mdi mdi-delete text-danger"></i></button>';
+                        if ($row->lock == "unlocked") {
+                            $btn = $btn . '<button class="btn btn-sm btn-transparent lock-toggle" onclick="lockToggle(this)" data-id="' . $row->id . '"><i class="mdi mdi-lock-outline text-danger"></i></button>';
+                        } else {
+                            $btn = $btn . '<button class="btn btn-sm btn-transparent lock-toggle" onclick="lockToggle(this)" data-id="' . $row->id . '"><i class="mdi mdi-lock-open-outline text-dark"></i></button>';
+                        }
 
-                    return $btn;
+                        return $btn;
+                    }
                 })->make(true);
         }
         return view('users.index', compact('role'));
@@ -43,6 +48,7 @@ class UserService
     public function show($id)
     {
         $data = User::find($id);
+        return $data;
     }
     public function update(array $data, $id)
     {

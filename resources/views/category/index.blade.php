@@ -4,7 +4,7 @@
         <div class="gap-2 mb-2 d-flex align-items-center">
             <a href="#" class="text-decoration-none text-dark" style="font-size: 10pt;">HOME</a>
             <span> / </span>
-            <a href="#" class="text-decoration-none text-dark" style="font-size: 10pt;">HOME</a>
+            <a href="#" class="text-decoration-none text-dark" style="font-size: 10pt;">KATEGORI</a>
 
         </div>
         <h3 class="fw-bold">Kategory</h3>
@@ -88,7 +88,7 @@
                 save_method = 'create';
                 resetValidation();
                 $('#modalForm').modal('show');
-                $('.modal-title').text('Create Pembelian');
+                $('.modal-title').text('Create Kategori');
                 $('.btnSubmit').text('Create');
             }
 
@@ -117,7 +117,7 @@
                 });
                 // $('#pembelianForm')[0].reset();
                 $('#modalForm').modal('show');
-                $('.modal-title').text('Edit Pembelian');
+                $('.modal-title').text('Edit Kategori');
                 $('.btnSubmit').text('Update');
             }
 

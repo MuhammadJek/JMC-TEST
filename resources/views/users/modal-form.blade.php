@@ -10,7 +10,7 @@
             </div>
             <form action="#" id="usersForm">
                 <div class="modal-body border-top border-bottom">
-                    <input type="hidden" name="id">
+                    {{-- <input type="hidden" name="id"> --}}
                     <div class="mb-3">
                         <label for="role">Role</label>
                         <select name="role" class="form-select">

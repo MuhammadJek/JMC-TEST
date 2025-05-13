@@ -16,7 +16,7 @@ Auth::routes();
 
 Route::resource('barang', BarangController::class);
 
-Route::middleware(['isAdmin'])->group(function () {
+Route::middleware(['isAdmin', 'locked'])->group(function () {
     Route::resource('category', CategoryController::class)->except('create');
     Route::resource('subcategory', SubCategoryController::class)->except('create');
     Route::resource('users', UserController::class)->except('create');
@@ -26,8 +26,3 @@ Route::middleware(['isAdmin'])->group(function () {
     Route::get('barang-cetak/{id}', [BarangController::class, 'cetakBarang'])->name('barang.cetak');
     Route::delete('barang-delete/{id}', [BarangController::class, 'deleteBarang'])->name('barang.deletes');
 });
-
-// Route::get('/categories/dataTable', [CategoryController::class, 'serverSideTable'])->name('datatable.category');
-
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -122,7 +122,7 @@
                 save_method = 'create';
                 resetValidation();
                 $('#modalForm').modal('show');
-                $('.modal-title').text('Tambah Sub Kategori');
+                $('.modal-title').text('Tambah user');
                 $('.btnSubmit').text('Create');
             }
 
@@ -154,7 +154,7 @@
                 });
                 // $('#pembelianForm')[0].reset();
                 $('#modalFormEdit').modal('show');
-                $('.modal-title').text('Edit Pembelian');
+                $('.modal-title').text('Edit User');
                 $('.btnSubmit').text('Update');
             }
 

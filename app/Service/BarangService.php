@@ -125,11 +125,11 @@ class BarangService
     }
     public function update($request, $id)
     {
-        $barang = Barang::where('id', $id)->pluck('harga');
-        $totalbarang = Barang::where('id', $id)->pluck('total_barang');
-        $jumlahbarang = Barang::where('id', $id)->pluck('jumlah_barang');
+        $barang = Barang::where('informasi_barang_id', $id)->pluck('harga');
+        $totalbarang = Barang::where('informasi_barang_id', $id)->sum('total_barang');
+        $jumlahbarang = Barang::where('informasi_barang_id', $id)->pluck('jumlah_barang');
 
-
+        // dd($totalbarang);
         if (Auth::user()->role == 'admin') {
             $dataValidateInformasi = $request->validate([
                 'operator_id' => 'required|exists:users,id',
@@ -156,38 +156,106 @@ class BarangService
         $date = $request->input('expired');
         $nosurat = $request->input('no_surat');
         // dd($name);
-        if (!empty($name) && is_array($name)) {
-            $dataValidateBarang = $request->validate([
-                'name.*' => 'required',
-                'harga.*' => 'required',
-                'jumlah_barang.*' => 'required|integer',
-                'satuan.*' => 'required',
-                'total_barang.*' => 'required',
-                'date.*' => 'required|date',
-            ]);
-        } else {
-            // $dataValidateBarang = $request->validate([
-            //     'name.*' => 'nullable',
-            //     'harga.*' => 'nullable',
-            //     'jumlah_barang.*' => 'nullable|integer',
-            //     'satuan.*' => 'nullable',
-            //     'total_barang.*' => 'nullable',
-            //     'date.*' => 'nullable|date',
-            // ]);
-        }
+
 
         // dd($dataValidateInformasi['max_price']);
         try {
             // dd($barang);
-            $replaceharga = str_replace('.', '', $barang);
-            $replacetotal = str_replace('.', '', $totalbarang);
-            // dd($replaceharga);
-            foreach ($barang as $index => $replacehargas) {
-                $hasil[] = $replacehargas * $jumlahbarang[$index];
-            }
-            $count = (array_sum($hasil));
-            $replacemax_price = str_replace('.', '', $dataValidateInformasi['max_price']);
-            if ($replacemax_price >= $count) {
+            if (empty($name) && is_array($name)) {
+                $dataValidateBarang = $request->validate([
+                    'name.*' => 'required',
+                    'harga.*' => 'required',
+                    'jumlah_barang.*' => 'required|integer',
+                    'satuan.*' => 'required',
+                    'total_barang.*' => 'required',
+                    'date.*' => 'required|date',
+                ]);
+                $replaceharga = str_replace('.', '', $harga);
+                $replacetotal = str_replace('.', '', $total_barang);
+                foreach ($replaceharga as $index => $replacehargas) {
+                    $hasil[] = $replacehargas * $dataValidateBarang['jumlah_barang'][$index];
+                }
+                $count = (array_sum($hasil));
+                $replacemax_price = str_replace('.', '', $dataValidateInformasi['max_price']);
+                $total_harga_input = array_sum($replacetotal);
+                $end = $total_harga_input + $totalbarang;
+
+                if ($replacemax_price >= $count && $end <= $replacemax_price) {
+                    if ($request->file) {
+                        $imageName = time() . '.' . $request->file->extension();
+                        $request->file->move(public_path('storage/image'), $imageName);
+                        if (Auth::user()->role == 'admin') {
+                            $informasiBarang = InformasiBarang::find($id)->update([
+                                'operator_id' => $dataValidateInformasi['operator_id'],
+                                'category_id' => $dataValidateInformasi['category_id'],
+                                'sub_category_id' => $dataValidateInformasi['sub_category_id'],
+                                'max_price' => $replacemax_price,
+                                'asal_barang' => $dataValidateInformasi['asal_barang'],
+                                'no_surat' => $request->no_surat,
+                                'file' => $imageName,
+                            ]);
+                        } else {
+                            $informasiBarang = InformasiBarang::find($id)->update([
+                                'operator_id' => Auth::user()->id,
+                                'category_id' => $dataValidateInformasi['category_id'],
+                                'sub_category_id' => $dataValidateInformasi['sub_category_id'],
+                                'max_price' => $replacemax_price,
+                                'asal_barang' => $dataValidateInformasi['asal_barang'],
+                                'no_surat' => $request->no_surat,
+                                'file' => $imageName,
+                            ]);
+                        }
+                    } else {
+                        if (Auth::user()->role == 'admin') {
+                            $informasiBarang =  InformasiBarang::find($id)->update([
+                                'operator_id' => $dataValidateInformasi['operator_id'],
+                                'category_id' => $dataValidateInformasi['category_id'],
+                                'sub_category_id' => $dataValidateInformasi['sub_category_id'],
+                                'max_price' => $replacemax_price,
+                                'no_surat' => $request->no_surat,
+                                'asal_barang' => $dataValidateInformasi['asal_barang'],
+                            ]);
+                        } else {
+                            $informasiBarang =  InformasiBarang::find($id)->update([
+                                'operator_id' => Auth::user()->id,
+                                'category_id' => $dataValidateInformasi['category_id'],
+                                'sub_category_id' => $dataValidateInformasi['sub_category_id'],
+                                'max_price' => $replacemax_price,
+                                'no_surat' => $request->no_surat,
+                                'asal_barang' => $dataValidateInformasi['asal_barang'],
+                            ]);
+                        }
+                    }
+
+                    if (empty($name) && is_array($name)) {
+                        foreach ($name as $key => $value) {
+                            Barang::create([
+                                'informasi_barang_id' => $id,
+                                'name' => $name[$key],
+                                'harga' => $replaceharga[$key],
+                                'jumlah_barang' => $jumlah_barang[$key],
+                                'satuan' => $satuan[$key],
+                                'total_barang' => $replacetotal[$key],
+                                'expired' => $date[$key],
+                            ]);
+                        }
+                        return redirect()->route('barang.index')->with('success', 'Berhasil mengedit Data');
+                    } else {
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Total Semua Barang And Melebihi Batas Maximal');
+                }
+            } else {
+                $dataValidateBarang = $request->validate([
+                    'name.*' => 'nullable',
+                    'harga.*' => 'nullable',
+                    'jumlah_barang.*' => 'nullable|integer',
+                    'satuan.*' => 'nullable',
+                    'total_barang.*' => 'nullable',
+                    'date.*' => 'nullable|date',
+                ]);
+                $replacemax_price = str_replace('.', '', $dataValidateInformasi['max_price']);
+
                 if ($request->file) {
                     $imageName = time() . '.' . $request->file->extension();
                     $request->file->move(public_path('storage/image'), $imageName);
@@ -233,24 +301,7 @@ class BarangService
                         ]);
                     }
                 }
-
-                if (!empty($name) && is_array($name)) {
-                    foreach ($name as $key => $value) {
-                        Barang::create([
-                            'informasi_barang_id' => $id,
-                            'name' => $name[$key],
-                            'harga' => $replaceharga[$key],
-                            'jumlah_barang' => $jumlah_barang[$key],
-                            'satuan' => $satuan[$key],
-                            'total_barang' => $replacetotal[$key],
-                            'expired' => $date[$key],
-                        ]);
-                    }
-                    return redirect()->route('barang.index')->with('success', 'Berhasil Membuat Data');
-                } else {
-                }
-            } else {
-                return redirect()->back()->with('error', 'Total Semua Barang And Melebihi Batas Maximal');
+                return redirect()->route('barang.index')->with('success', 'Berhasil mengedit Data');
             }
         } catch (\Throwable $th) {
             throw $th;
